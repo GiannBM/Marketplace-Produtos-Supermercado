@@ -1,5 +1,5 @@
 
-Seja muito bem vindo ao aplicativo de comparação de produtos de supermercados!
+Seja muito bem vindo ao aplicativo de comparação de produtos de supermercados (ainda em desenvolvimento)!
 
 Aplicativo este que permite realizar a entrada de dados via QRcode da nota fiscal e depois realizar a busca de um produto desejado!
 
