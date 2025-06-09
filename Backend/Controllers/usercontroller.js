@@ -3,7 +3,7 @@ const { exec, spawn} = require('child_process');
 const jwt = require('jsonwebtoken')
 
 
-const SECRET = "4gcRTEpUllFv3AlJ76Af4evdkNtiow5n";
+const SECRET = "mudeosecret";
 
 class UserController {
 
