@@ -3,10 +3,10 @@ const {Pool} = require("pg")
 
 const pool = new Pool({
 
-    user: "changeMe",
-    password: "changeMe", 
-    host: "localhost", 
-    port: 5432,
+    user: "",
+    password: "", 
+    host: "", 
+    port: ,
     database: "Mercado"
 })
 

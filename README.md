@@ -11,7 +11,6 @@ Aplicativo este que permite realizar a entrada de dados via QRcode da nota fisca
 
    'npm install'
    
-
 2. Criando o Banco de Dados
 
    Certifique-se de ter o PostegreSQL instalado, assim como o pgadmin4 do PostgreSQL.
@@ -33,7 +32,7 @@ Aplicativo este que permite realizar a entrada de dados via QRcode da nota fisca
 
    Navegue para dentro da pasta /app
 
-   Para cada requisição, dentro de cada página da pasta, mude o IP para o IP da sua máquina, que irá rodar o backend.
+   Para cada página, existe uma variavel chamada ipaddress, em que deverá conter o IP que irá rodar o Backend, deste modo, mude o IP para o IP da sua máquina, que irá rodar o backend.
 
 
 5. Navegue para o diretório inicial do projeto e execute o comando:

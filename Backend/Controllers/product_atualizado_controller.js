@@ -68,6 +68,9 @@ class Product_att_Controller {
             const estabelecimento = produto.Estabelecimento
             const cnpj = produto.Cnpj
             const datass = produto.Data
+            const latitude = produto.Latitude
+            const longitude = produto.Longitude
+
 
 
 
@@ -106,7 +109,7 @@ class Product_att_Controller {
 
                 if(data.rows.length==0){
                                     
-                   const data2 = await database.query("INSERT into produtosatualizados(produto, unidade, valorunitario, datas, endereco, estabelecimento, cnpj, embedding) values ($1, $2, $3, $4, $5, $6, $7, $8);", [produtonome , unidade, valorunitario, datass, endereco, estabelecimento, cnpj, embeddings]);
+                   const data2 = await database.query("INSERT into produtosatualizados(produto, unidade, valorunitario, datas, endereco, estabelecimento, cnpj, embedding, longitude, latitude) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);", [produtonome , unidade, valorunitario, datass, endereco, estabelecimento, cnpj, embeddings,longitude,latitude]);
                 }
                 
                 else{
@@ -140,7 +143,10 @@ class Product_att_Controller {
         try{
 
             const idssearch = await database.query("select id_ from produtosatualizados");
-            const embeddingssearch = await database.query("select embedding from produtosatualizados");
+            const embeddingssearch = await database.query("select embedding from produtosatualizados");           
+            const latitude = await database.query("select latitude from produtosatualizados");
+            const longitude = await database.query("select longitude from produtosatualizados");
+
 
 
             const QueryObj = {
@@ -148,6 +154,12 @@ class Product_att_Controller {
                 query: produtos[0].Produto,
                 id : idssearch.rows,
                 embeddings: embeddingssearch.rows,
+                distmax: produtos[0].DistMax,
+                lat: latitude.rows,
+                longi: longitude.rows,
+                latUser: produtos[0].LatitudeUser,
+                longiUser: produtos[0].LongitudeUser
+
             }
 
             const QueryObjStringify = JSON.stringify(QueryObj)
@@ -186,7 +198,7 @@ class Product_att_Controller {
                 });
 
 
-            const final_search = await database.query("select id_, produto, unidade, valorunitario, datas, endereco, estabelecimento, cnpj from produtosatualizados where id_ = ANY($1) order by array_position($1, id_)", [closerproducts["ids"]]);
+            const final_search = await database.query("select id_, produto, unidade, valorunitario, datas, endereco, estabelecimento, cnpj, longitude, latitude from produtosatualizados where id_ = ANY($1) order by array_position($1, id_)", [closerproducts["ids"]]);
 
             return res.status(200).json(final_search.rows);
 

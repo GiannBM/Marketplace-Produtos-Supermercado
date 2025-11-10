@@ -1,17 +1,27 @@
-import { Text, View, StyleSheet, Button, TouchableOpacity } from "react-native";
+import { Text, View, Image, StyleSheet, Button, TouchableOpacity } from "react-native";
 import { Link } from 'expo-router';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from "react-native-safe-area-context";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 export default function Home() {
 
   const router = useRouter();
+  const image = require("../assets/images/LogoFoundIt.png")
+
 
   return (
 
-      <SafeAreaView style={styles.container}>
+     <LinearGradient
+      colors={['#b19dc9ff', '#7c68e0ff']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.container}
+    >
+      
+        <Image source={image} style ={styles.image}/>
+      
 
         <TouchableOpacity
 
@@ -27,10 +37,10 @@ export default function Home() {
           onPress={()=>router.navigate("./register")}
         >
           <Text style={styles.text}>Cadastro</Text>
+        
         </TouchableOpacity>
 
-        
-      </SafeAreaView>  
+      </LinearGradient>
 
     );
 }
@@ -44,18 +54,30 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   text: {
-    color: 'black',
-    textAlign: 'center'
+    color: 'white',
+    textAlign: 'center',
+    fontSize:25,
+    fontWeight:700
   },
+
   button: {
-    borderColor: 'black',
-    backgroundColor: 'lightcyan',
-    borderWidth: 2,
-    padding: 10,
-    borderRadius: 8,
-    width: 200,
-    height: 50,
-    marginBottom: 30,
+    backgroundColor: '#ae9ff7ff',
+    width:200,
+    padding:17,
+    borderRadius: 10,
+    marginVertical: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+  },
+  image:{
+
+    marginTop:-175,
+    marginBottom:-50,
+    width: 450,
+    height: 450,
+    resizeMode: 'contain',
+
   },
 
 });

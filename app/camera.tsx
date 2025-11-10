@@ -14,7 +14,7 @@ export default function userpage() {
 
   const router = useRouter();
   const [permission, requestPermission] = useCameraPermissions();
-  const [haspermission, sethaspermission] = React.useState(false);
+  const [habilitado, sethabilitado] = React.useState(false);
   const scanned = useRef(false)
 
   async function requestpermission() {
@@ -23,12 +23,12 @@ export default function userpage() {
 
         const stats = await requestPermission()
 
-        sethaspermission(stats.granted)
+        sethabilitado(stats.granted)
     }
 
     else{
 
-        sethaspermission(true)
+        sethabilitado(true)
     }
 
     
@@ -58,7 +58,7 @@ export default function userpage() {
       
     <SafeAreaView style={styles.container}>         
 
-        {haspermission && !scanned.current && (
+        {habilitado && !scanned.current && (
 
             <CameraView
               style={StyleSheet.absoluteFillObject}

@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, Button, TouchableOpacity, TextInputComponent, Modal, ActivityIndicator } from "react-native";
+import { Text, View, StyleSheet, Button, TouchableOpacity, TextInputComponent, Modal, ActivityIndicator, Linking } from "react-native";
 import { Link } from 'expo-router';
 import { useEffect } from "react";
 import React from 'react';
@@ -6,9 +6,12 @@ import { useRouter} from 'expo-router';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from '@expo/vector-icons';
 import { FlatList, TextInput} from "react-native-gesture-handler";
+import MapView, { Marker } from 'react-native-maps';
+import Slider from '@react-native-community/slider';
 
+import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { SearchBar } from "react-native-elements";
+import { Callout } from "react-native-maps";
 
 
 export default function searchproduct() {
@@ -18,10 +21,36 @@ export default function searchproduct() {
     const [id, onChangeId] = React.useState('');
     const [query, setQuery] = React.useState('');
     const [products, setProducts] = React.useState([]);
+    const [productsGeocode, setProductsGeocode] = React.useState([]);
     const [loading, setloading] = React.useState(false);
+    const [distMax, setDistMax] = React.useState<number>(0);
+
+    const ipaddress = ""
 
     
 
+    async function abrirWaze(param1: string, param2: string) {
+
+         try {
+          const url = `waze://?ll=${param1},${param2}&navigate=yes`;
+          const urlWeb = `https://waze.com/ul?ll=${param1},${param2}`;
+
+          
+          const checkOpenUrl = await Linking.canOpenURL(url);
+
+          if(checkOpenUrl){
+           
+            await Linking.openURL(url);
+          }
+          else{
+            
+            await Linking.openURL(urlWeb);
+          }
+
+        } catch (err) {
+          console.warn('Erro ao abrir Waze ', err);
+        }
+    }
 
 
     async function queryProducts(){
@@ -30,16 +59,21 @@ export default function searchproduct() {
         setloading(true)
 
         const datatoken = await AsyncStorage.getItem('token')
+        const longitudeUser = await AsyncStorage.getItem('longitudeUser')
+        const latitudeUser = await AsyncStorage.getItem('latitudeUser')
 
         const novoproduct = [{
-            Produto: query
+            Produto: query,
+            DistMax: distMax,
+            LongitudeUser: longitudeUser,
+            LatitudeUser: latitudeUser
         }]
 
 
         
         if(datatoken!=null){
 
-            const response = await fetch('http://xxxxxxx:8080/produtoatt/query', {
+            const response = await fetch(`http://${ipaddress}:8080/produtoatt/query`, {
                 method: 'POST',
                 headers: {
                 'Content-Type': 'application/json',
@@ -72,12 +106,15 @@ export default function searchproduct() {
   return (
 
 
-    <View
+    <LinearGradient
+      colors={['#b19dc9ff', '#7c68e0ff']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
       style={{
         flex: 1,
         alignItems: "center",
         padding: 6,
-      }}
+      }}  
     > 
 
         <View style={styles.rowmodal}>
@@ -91,17 +128,45 @@ export default function searchproduct() {
             onSubmitEditing={queryProducts}
             />
 
-            <Button title="Buscar" onPress={queryProducts} />
+            <View style={{justifyContent:'center'}}>
+              <TouchableOpacity style={styles.button2} onPress={queryProducts}>
+                <Text style ={styles.botaopesq}> BUSCAR </Text>
+              </TouchableOpacity>
+            </View>
+
         </View>
+
+        
+        <Text style={{margin:30, marginBottom:20, color:'white', fontSize:18, fontWeight:800}}>Distância Máxima: {distMax}</Text>
+
+         <View style={{ alignItems:'center', marginBottom:20 }}>
+
+
+            <Slider
+              style={{ width: 300, height: 40 }}
+              minimumValue={0}
+              maximumValue={20}
+              step={0.5}
+              value={distMax}
+              onValueChange={setDistMax}
+              minimumTrackTintColor="#cdeeffff"
+              maximumTrackTintColor="#e9e5e5ff"
+              thumbTintColor="#cdeeffff"
+            />
+          </View>                                    
 
         <View>
 
             {loading ? (
-                <ActivityIndicator size="large" color="#007bff" style={{ marginTop: 20 }} />
+                <ActivityIndicator size="large" color="white" style={{ marginTop: 20 }} />
             ) : (
             <FlatList
                 data={products}
                 keyExtractor={(item, index) => index.toString()} 
+
+                contentContainerStyle={{
+                  paddingBottom: 220, 
+                }}
 
                 renderItem={({ item }) => (
 
@@ -121,13 +186,60 @@ export default function searchproduct() {
 
                          
 
-                  <Text style={styles.estabelecimento}>
-                    🛒 {item["estabelecimento"]}
-                  </Text>
+                  <View style ={{flexDirection: 'row'}}>
 
-                  <Text style={styles.endereco}>
-                    📍 {item["endereco"]}
-                  </Text>
+                    <Ionicons style={{marginRight:5}} name="cart" size={22} color="black"/>
+                    <Text style={styles.estabelecimento}>
+                        {item["estabelecimento"]}
+                    </Text>
+                  </View>
+
+                  <View style ={{flexDirection: 'row'}}>
+
+                    <Ionicons style={{marginRight:5}} name="location-sharp" size={22} color="black"/>
+                    <Text style={styles.endereco}>
+                      {item["endereco"]}
+                    </Text>
+                  </View>
+
+                  
+
+                  <MapView 
+                  
+                    style={styles.mapsize}
+                    initialRegion={{
+                      latitude: item["latitude"],
+                      longitude: item["longitude"],
+                      latitudeDelta: 0.005,
+                      longitudeDelta: 0.005,
+                    }}
+                  
+                  >
+
+                    <Marker
+                      coordinate={{
+                        latitude: item["latitude"],
+                        longitude: item["longitude"]
+                      }}
+                    >            
+
+                    <Callout>
+                      <View style={styles.callout}>
+                        
+                        <Text style={{ flexWrap: 'wrap', fontWeight: 'bold', marginBottom: 5, fontSize: 13}}>{item["estabelecimento"]}</Text>
+                        <Text style={{ flexWrap: 'wrap', fontSize: 11 }}>{item["endereco"]}</Text>
+                      </View>
+                    </Callout>
+                     
+                    
+                    </Marker>
+
+                  </MapView>
+
+                  <TouchableOpacity style={styles.botaowaze} onPress={() => abrirWaze(item["latitude"], item["longitude"])}>
+                    <Text style={styles.textowaze}>Abrir no Waze</Text>
+                  </TouchableOpacity>
+          
                 </View>
                 )}
             />)}
@@ -137,7 +249,7 @@ export default function searchproduct() {
     
 
         
-    </View>
+    </LinearGradient>
   );
 }
 
@@ -146,52 +258,34 @@ export default function searchproduct() {
 
 const styles = StyleSheet.create({
 
-  input2: {
-    borderColor: 'black',
-    borderBottomWidth: 1,
-    borderRadius: 2,
+  input2: {    
     width: 200,
     height: 50,
-    marginBottom: 20,
+    fontSize:16,
+    fontWeight:800,
+    color:'white'
   },
 
   container: {
 
     width: 350,
     padding: 15,
-    backgroundColor: '#fff',
+    backgroundColor:"#e1e5faff",
     shadowColor: 'black',
     shadowOpacity: 0.3,
     shadowRadius: 4,
     margin: 12,
-    borderRadius: 5,
+    borderRadius: 9,
 
   },
- 
-  button: {
-    position: 'absolute',
-    top: 15,
-    right: 5,  
-    borderRadius: 2,
-    width: 75,
-    height: 70,
-    textAlign: 'center'
+
+  button2:{
+
+    justifyContent:'center'
   },
 
-  modalstyle:{
 
-    backgroundColor: 'white',
-    textAlign: 'center',
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignContent: 'center',
-    width: '80%',
-    padding: 10,
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-    zIndex:2,
-  },
+  
 
 
   rowmodal:{
@@ -200,21 +294,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 16,
     alignItems: 'center',
+    borderColor:'white',
+    borderWidth:1,
+    padding: 8,
+    paddingRight:11,
+    paddingLeft:11,
+    borderRadius:20,
 
-  },
-
-
-  text: {
-    color: 'black',
-    textAlign: 'center',
-    fontSize: 12,
-  },
-
-  linha:{
-
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: 'row',
   },
 
 
@@ -261,4 +347,39 @@ const styles = StyleSheet.create({
 
   },
 
+  mapsize: {
+
+    marginBottom: 8,
+    height: 150,
+    width: '100%', 
+  },
+
+  callout:{
+
+    maxWidth: 200,
+    padding: 5,
+    borderRadius: 2,
+  },
+
+  botaopesq:{
+
+    fontSize:16,
+    fontWeight:800,
+    color:'white'
+  },
+
+   botaowaze: {
+    backgroundColor: '#b3b6e7ff',   
+    padding: 12,                  
+    borderRadius: 6,              
+    alignItems: 'center',         
+    marginVertical: 8,
+  },
+
+
+  textowaze: {
+    color: '#fff',                
+    fontSize: 16,
+    fontWeight: '500',
+  },
 });

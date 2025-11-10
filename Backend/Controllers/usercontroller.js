@@ -3,7 +3,7 @@ const { exec, spawn} = require('child_process');
 const jwt = require('jsonwebtoken')
 
 
-const SECRET = "mudeosecret";
+const SECRET = "4gcRTEpUllFv3AlJ76Af4evdkNtiow";
 
 class UserController {
 
@@ -62,7 +62,7 @@ class UserController {
 
                 if(data.rows[0].senha===user.senha){
 
-                    const token = jwt.sign({id:data.rows[0].id_, email: data.rows[0].email}, SECRET, {expiresIn: 60})
+                    const token = jwt.sign({id:data.rows[0].id_, email: data.rows[0].email}, SECRET, {expiresIn: 3600})
 
                     console.log(token)
                     return res.status(200).json({message: "True", token});
@@ -97,7 +97,7 @@ class UserController {
                 const data3 = await database.query("Select * from users where email=$1;", [user.email]);
 
 
-                const token = jwt.sign({id:data3.rows[0].id_, email: user.email}, SECRET, {expiresIn: 60})
+                const token = jwt.sign({id:data3.rows[0].id_, email: user.email}, SECRET, {expiresIn: 3600})
 
                 console.log(token)
 

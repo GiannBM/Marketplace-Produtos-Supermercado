@@ -3,15 +3,18 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import sys
 import json
+import time
+
 
 
 sentence = sys.argv[1]
 
-
 model = SentenceTransformer("intfloat/multilingual-e5-base")
 
-#PORTULAN/serafim-900m-portuguese-pt-sentence-encoder
+#model = SentenceTransformer("modelos/multilingual-e5-base")
+
 #intfloat/multilingual-e5-base
+
 sentenceFormatada = f"passage: {sentence}"
 
 embeddings = model.encode(sentenceFormatada, normalize_embeddings=False)
@@ -20,14 +23,3 @@ embedding_tolist = embeddings.tolist()
 
 #print(embedding_tolist)
 print(json.dumps(embedding_tolist))
-
-
-
-
-
-### Utilizado no SERAFIM
-#embeddings = model.encode(sentence)
-
-#embedding_tolist = embeddings.tolist()
-
-#print(json.dumps(embedding_tolist))

@@ -1,10 +1,9 @@
-import { Text, View, StyleSheet, Button, TouchableOpacity, TextInputComponent } from "react-native";
-import { Link } from 'expo-router';
+import { Text, View, StyleSheet,Image, Button, TouchableOpacity, TextInputComponent } from "react-native";
 import React from 'react';
 import { useRouter } from 'expo-router';
-import { SafeAreaView } from "react-native-safe-area-context";
-import { TextInput, NativeViewGestureHandler } from "react-native-gesture-handler";
+import { TextInput} from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LinearGradient } from 'expo-linear-gradient';
 
  
 
@@ -15,13 +14,19 @@ export default function register() {
   const [nome, onChangenome] = React.useState('');
   const [senha, onChangeSenha] = React.useState('');
 
+  const image = require("../assets/images/LogoFoundIt.png")
+
+
+  const ipaddress = ""
+
+
   const funcregister = async() => {
 
     const data = {email,nome,senha}
 
     
 
-    const response = await fetch('http://xxxxxxxxxxx:8080/user/cadastro', {
+    const response = await fetch(`http://${ipaddress}:8080/user/cadastro`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -49,9 +54,15 @@ export default function register() {
 
   return (
     
-    <NativeViewGestureHandler>
+        <LinearGradient
+            colors={['#b19dc9ff', '#7c68e0ff']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.container}
+        >
 
-      <SafeAreaView style={styles.container}>
+        <Image source={image} style ={styles.image}/>
+
       
         <TextInput 
                 
@@ -76,6 +87,7 @@ export default function register() {
 
         style={styles.input}
         onChangeText={onChangeSenha}
+        secureTextEntry={true}
         value={senha}
         placeholder="Senha"
         keyboardType="default"
@@ -93,9 +105,7 @@ export default function register() {
         </TouchableOpacity>
       
             
-      </SafeAreaView>  
-    </NativeViewGestureHandler>
-
+    </LinearGradient>
   );
 }
 
@@ -108,27 +118,40 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   text: {
-    color: 'black',
-    textAlign: 'center'
+    color: 'white',
+    textAlign: 'center',
+    fontSize:26,
+    fontWeight:600
   },
   input: {
-    borderColor: 'black',
-    borderBottomWidth: 1,
+    borderColor: 'white',
     padding: 10,
-    borderRadius: 2,
-    width: 200,
+    borderRadius: 10,
+    borderBottomWidth:1,
+    width: 230,
     height: 50,
-    marginBottom: 30,
+    margin:10,
+    fontSize:20,
+    fontWeight:600,
+    color:'white'
   },
 
   button: {
-    borderColor: 'black',
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 2,
-    width: 200,
-    height: 50,
-    marginBottom: 30,
+    backgroundColor: '#ae9ff7ff',
+    width:230,
+    padding:17,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginVertical: 8,
+  },
+  image:{
+
+    marginTop:-150,
+    marginBottom:-50,
+    width: 350,
+    height: 350,
+    resizeMode: 'contain',
+
   },
 
 

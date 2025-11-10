@@ -5,10 +5,10 @@ const middleware = require("../Middleware/auth")
 
 const route = Router()
 
-route.get("/", product.getProductsAtt)
-route.get("/:produto", product.getProductbyName)
-route.post("/post",product.postproductAtt)
-route.post("/query",product.queryproducts)
+route.get("/", middleware, product.getProductsAtt)
+route.get("/:produto", middleware, product.getProductbyName)
+route.post("/post", middleware, product.postproductAtt)
+route.post("/query", middleware, product.queryproducts)
 
 
 

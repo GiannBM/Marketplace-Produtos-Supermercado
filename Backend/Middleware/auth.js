@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 
 
-const SECRET = "mudeoSecret";
+const SECRET = "4gcRTEpUllFv3AlJ76Af4evdkNtiow";
 
 
 function JWTverroute(req, res, next){

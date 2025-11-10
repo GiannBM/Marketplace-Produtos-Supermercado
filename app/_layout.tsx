@@ -14,6 +14,11 @@ export default function RootLayout() {
           <Stack.Screen name="userpage" options={{ title: 'UserPage' }} />
           <Stack.Screen name="camera" options={{ title: 'Camera' }} />
           <Stack.Screen name="searchproduct" options={{ title: 'Busca Produtos' }} />
+          <Stack.Screen name="listas" options={{ title: 'Minhas Listas' }} />
+          <Stack.Screen name="itens_lista" options={{ title: 'Itens Lista' }} />
+          <Stack.Screen name="estatisticas" options={{ title: 'Estatisticas' }} />
+
+
 
         </Stack>
     </GestureHandlerRootView>
