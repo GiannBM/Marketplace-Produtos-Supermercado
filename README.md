@@ -5,7 +5,7 @@ Aplicativo este que permite realizar a entrada de dados via QRcode da nota fisca
 
 
 
-1. Intale as Depêndencias
+1. Instale as Depêndencias
 
    Navegue até o diretório do projeto em que esta localizado o arquivo "package.json", e execute o comando a seguir: 
 
@@ -26,13 +26,15 @@ Aplicativo este que permite realizar a entrada de dados via QRcode da nota fisca
    Mude os parâmetros:
       - user
       - password
+      - host
+      - port
 
 
 4. Mudança de IP's
 
    Navegue para dentro da pasta /app
 
-   Para cada página, existe uma variavel chamada ipaddress, em que deverá conter o IP que irá rodar o Backend, deste modo, mude o IP para o IP da sua máquina, que irá rodar o backend.
+   Para cada página dentro da pasta, existe uma variavel chamada ipaddress, em que deverá conter o IP que irá rodar o Backend, deste modo, mude o IP para o IP da sua máquina.
 
 
 5. Navegue para o diretório inicial do projeto e execute o comando:
